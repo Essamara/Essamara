@@ -8,7 +8,10 @@ import argparse
 
 class Game(ShowBase):
     def __init__(self, args):
-        super().__init__(windowType='offscreen')
+        # Determine window type based on the --headless flag
+        window_type = 'offscreen' if args.headless else 'onscreen'
+        super().__init__(windowType=window_type)
+
         print("Game: Initializing...")
 
         # --- Graphics Polish ---
@@ -70,6 +73,7 @@ if __name__ == '__main__':
     # --- Argument Parsing ---
     parser = argparse.ArgumentParser(description="Panda3D Voxta Character Engine")
     parser.add_argument('--no-ws', action='store_true', help="Disable the WebSocket client.")
+    parser.add_argument('--headless', action='store_true', help="Run in headless (offscreen) mode.")
     args = parser.parse_args()
 
     print("Main: Setting up game application...")
@@ -78,13 +82,16 @@ if __name__ == '__main__':
         app = Game(args)
         print("Main: Application setup complete.")
 
-        print("Main: Simulating 5 seconds of runtime...")
-        end_time = time.time() + 5
-        while time.time() < end_time:
-            app.taskMgr.step()
-            time.sleep(0.1)
-
-        print("Main: Simulation finished.")
+        if args.headless:
+            print("Main: Headless mode detected. Simulating 5 seconds of runtime...")
+            end_time = time.time() + 5
+            while time.time() < end_time:
+                app.taskMgr.step()
+                time.sleep(0.1)
+            print("Main: Simulation finished.")
+        else:
+            print("Main: Starting interactive application loop.")
+            app.run() # This starts the main, blocking loop for the interactive window
 
     except Exception as e:
         print(f"Main: An error occurred during app setup or run: {e}", file=sys.stderr)
