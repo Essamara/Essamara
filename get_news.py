@@ -1,7 +1,7 @@
 import requests
 import os
 
-def get_news(api_key: str, query: str = "world news", language: str = "en", limit: int = 5) -> str:
+def get_news(api_key: str, query: str = "world news", language: str = "en", limit: int = 5, published_after: str = None, published_before: str = None) -> str:
     """
     Fetches the latest news from The News API's 'all' endpoint for more recent results.
 
@@ -16,6 +16,10 @@ def get_news(api_key: str, query: str = "world news", language: str = "en", limi
     """
     # Using the '/all' endpoint to get more recent, less curated news
     api_url = f"https://api.thenewsapi.com/v1/news/all?api_token={api_key}&search={query}&language={language}&limit={limit}"
+    if published_after:
+        api_url += f"&published_after={published_after}"
+    if published_before:
+        api_url += f"&published_before={published_before}"
 
     try:
         response = requests.get(api_url)
@@ -42,7 +46,7 @@ def get_news(api_key: str, query: str = "world news", language: str = "en", limi
 if __name__ == '__main__':
     # You can run this script directly to test it.
     # Make sure to set your API key in an environment variable named 'NEWS_API_KEY'
-    api_key = os.environ.get("NEWS_API_KEY", "YOUR_API_KEY_HERE")
+    api_key = os.environ.get("NEWS_API_KEY", "XNLDKFYxf91IIsVYaHNAJlQDIoASIjHLIedPn0Nx")
     if api_key == "YOUR_API_KEY_HERE":
         print("Please set your NEWS_API_KEY environment variable or replace 'YOUR_API_KEY_HERE' in the script.")
     else:
