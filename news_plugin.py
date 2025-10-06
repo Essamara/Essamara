@@ -44,7 +44,7 @@ def run_conversation():
     messages = [
         {
             "role": "user",
-            "content": f"What's the latest news on {topic}? Please summarize the top 3 articles for me.",
+            "content": f"What's the latest news on {topic}? Please summarize the top 10 articles for me.",
         }
     ]
 
@@ -78,7 +78,7 @@ def run_conversation():
             query = tool_args.get("query", topic) # Use the topic from user input
 
             print(f"Fetching news for query: '{query}'")
-            news_results = get_news(api_key=api_key, query=query, limit=3)
+            news_results = get_news(api_key=api_key, query=query, limit=10) # Fetch 10 articles
 
             # --- 7. Send the news back to the model for summarization ---
             print("News received. Asking model to summarize...")
