@@ -1,21 +1,21 @@
 import requests
 import os
 
-def get_news(api_key: str, query: str = "top stories", country: str = "us", category: str = "general", limit: int = 5) -> str:
+def get_news(api_key: str, query: str = "world news", language: str = "en", limit: int = 5) -> str:
     """
-    Fetches news from The News API.
+    Fetches the latest news from The News API's 'all' endpoint for more recent results.
 
     Args:
         api_key: Your API key for The News API.
         query: The search query for news articles.
-        country: The country to fetch news from (e.g., 'us', 'gb').
-        category: The category of news to fetch (e.g., 'business', 'sports').
+        language: The language to fetch news in (e.g., 'en', 'de').
         limit: The number of articles to return.
 
     Returns:
         A formatted string of news headlines and snippets, or an error message.
     """
-    api_url = f"https://api.thenewsapi.com/v1/news/top?api_token={api_key}&search={query}&locale={country}&limit={limit}&categories={category}"
+    # Using the '/all' endpoint to get more recent, less curated news
+    api_url = f"https://api.thenewsapi.com/v1/news/all?api_token={api_key}&search={query}&language={language}&limit={limit}"
 
     try:
         response = requests.get(api_url)
@@ -29,7 +29,8 @@ def get_news(api_key: str, query: str = "top stories", country: str = "us", cate
         for article in news_data["data"]:
             title = article.get("title", "No Title")
             snippet = article.get("snippet", "No Snippet Available")
-            formatted_news += f"Title: {title}\nSnippet: {snippet}\n\n"
+            source = article.get("source", "No Source")
+            formatted_news += f"Title: {title}\nSource: {source}\nSnippet: {snippet}\n\n"
 
         return formatted_news.strip()
 
@@ -45,5 +46,6 @@ if __name__ == '__main__':
     if api_key == "YOUR_API_KEY_HERE":
         print("Please set your NEWS_API_KEY environment variable or replace 'YOUR_API_KEY_HERE' in the script.")
     else:
-        news = get_news(api_key)
+        # Fetch latest news about 'AI development'
+        news = get_news(api_key, query="AI development", language="en")
         print(news)

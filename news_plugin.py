@@ -5,27 +5,23 @@ from get_news import get_news
 # Point to the local server
 client = OpenAI(base_url="http://localhost:8080/v1", api_key="not-needed")
 
-# --- 1. Define the get_news tool ---
+# --- 1. Define the updated get_news tool ---
 tools = [
     {
         "type": "function",
         "function": {
             "name": "get_news",
-            "description": "Get the latest news articles on a specific topic.",
+            "description": "Get the latest news articles on a specific topic from a global feed.",
             "parameters": {
                 "type": "object",
                 "properties": {
                     "query": {
                         "type": "string",
-                        "description": "The topic to search for, e.g., 'artificial intelligence'. Defaults to 'top stories'.",
+                        "description": "The topic to search for, e.g., 'artificial intelligence'. Defaults to 'world news'.",
                     },
-                    "country": {
+                    "language": {
                         "type": "string",
-                        "description": "The 2-letter ISO 3166-1 code of the country, e.g., 'us' or 'gb'.",
-                    },
-                     "category": {
-                        "type": "string",
-                        "description": "The category of news, e.g., 'business', 'sports', 'technology'.",
+                        "description": "The 2-letter language code for the news, e.g., 'en' for English.",
                     },
                 },
                 "required": [], # No parameters are strictly required, defaults will be used
@@ -42,7 +38,7 @@ def run_conversation():
     messages = [
         {
             "role": "user",
-            "content": "What are the top news stories today? Please summarize them for me.",
+            "content": "What's the latest news on AI development? Please summarize the top 3 articles for me.",
         }
     ]
 
@@ -72,9 +68,14 @@ def run_conversation():
                 print("\nERROR: Please set your NEWS_API_KEY environment variable.")
                 return
 
-            # For simplicity, we'll use default parameters.
             # A more advanced version could parse arguments from tool_call.function.arguments
-            news_results = get_news(api_key=api_key)
+            # For this example, we'll extract the query if the model provides it.
+            import json
+            tool_args = json.loads(tool_call.function.arguments)
+            query = tool_args.get("query", "world news") # Default to 'world news' if not specified
+
+            print(f"Fetching news for query: '{query}'")
+            news_results = get_news(api_key=api_key, query=query, limit=3) # Limit to 3 as requested
 
             # --- 6. Send the news back to the model for summarization ---
             print("News received. Asking model to summarize...")
