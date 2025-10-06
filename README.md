@@ -1,13 +1,14 @@
 # Llama.cpp News Plugin
 
-This project is a Python-based plugin for `llama.cpp` that allows a local Large Language Model (LLM) to fetch and summarize the latest news. It uses the `llama.cpp` server's OpenAI-compatible API and its function-calling/tool-use feature.
+This project is a Python-based plugin for `llama.cpp` that allows a local Large Language Model (LLM) to fetch and summarize the latest news on a topic you provide. It uses the `llama.cpp` server's OpenAI-compatible API and its function-calling/tool-use feature.
 
 ## How It Works
 
-1.  **`news_plugin.py`**: This is the main script. It defines a `get_news` tool that the LLM can use. When you run the script, it sends a prompt to the LLM asking for a news summary.
-2.  **Function Call**: The LLM, running on the `llama.cpp` server, recognizes that it needs to use the `get_news` tool to fulfill the request. It sends a response back to the `news_plugin.py` script, indicating that it wants to call the function.
-3.  **`get_news.py`**: The main script then calls the `get_news()` function from this file. This function makes an API request to [The News API](https://thenewsapi.com) to fetch the latest news articles.
-4.  **Summarization**: The fetched news is sent back to the LLM as the result of the tool call. The LLM then uses this information to generate a concise summary, which is printed to the console.
+1.  **User Input**: When you run the main script, it will prompt you to enter a news topic (e.g., "London" or "AI development").
+2.  **`news_plugin.py`**: This script takes your input and sends a prompt to the LLM asking for a news summary on that topic. It also defines a `get_news` tool that the LLM can use.
+3.  **Function Call**: The LLM, running on the `llama.cpp` server, recognizes that it needs to use the `get_news` tool. It sends a response back to the script indicating that it wants to call the function with your chosen topic.
+4.  **`get_news.py`**: The main script then calls the `get_news()` function, which makes an API request to [The News API](https://thenewsapi.com) to fetch the latest articles related to your topic.
+5.  **Summarization**: The fetched news is sent back to the LLM as the result of the tool call. The LLM then uses this information to generate a concise summary, which is printed to the console.
 
 ## Setup and Usage
 
@@ -70,4 +71,4 @@ Once the `llama.cpp` server is running and your environment is set up, you can r
 python news_plugin.py
 ```
 
-The script will then interact with the local LLM to fetch and display a summary of the latest news.
+The script will prompt you to enter a topic. After you provide a topic, it will interact with the local LLM to fetch and display a summary of the latest news.
