@@ -40,11 +40,11 @@ def run_conversation():
         print("No topic entered. Exiting.")
         return
 
-    # --- 3. Create the initial message with instructions for a longer summary ---
+    # --- 3. Create the initial message ---
     messages = [
         {
             "role": "user",
-            "content": f"What's the latest news on {topic}? Please provide a detailed summary of the top 10 articles. The summary should be a comprehensive paragraph of at least 10 sentences, synthesizing the key points from all the articles provided.",
+            "content": f"What's the latest news on {topic}? Please summarize the top 10 articles for me.",
         }
     ]
 
@@ -81,7 +81,7 @@ def run_conversation():
             news_results = get_news(api_key=api_key, query=query, limit=10) # Fetch 10 articles
 
             # --- 7. Send the news back to the model for summarization ---
-            print("News received. Asking model to generate a detailed summary...")
+            print("News received. Asking model to summarize...")
             messages.append(response_message)
             messages.append(
                 {
@@ -98,9 +98,9 @@ def run_conversation():
             )
 
             # --- 8. Print the final summary ---
-            print("\n--- Detailed News Summary ---")
+            print("\n--- News Summary ---")
             print(second_response.choices[0].message.content)
-            print("---------------------------\n")
+            print("--------------------\n")
         else:
             print(f"Error: Model tried to call an unknown function: {function_name}")
 
